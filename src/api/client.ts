@@ -27,9 +27,12 @@ export default apiClient;
 
 export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    const data = error.response?.data as { error?: { message?: string } | string; message?: string } | undefined;
+    const data = error.response?.data as
+      | { error?: { message?: string } | string; message?: string }
+      | undefined;
     // Backend wraps errors as { error: { message } }
-    if (data?.error && typeof data.error === 'object' && data.error.message) return data.error.message;
+    if (data?.error && typeof data.error === 'object' && data.error.message)
+      return data.error.message;
     // Fallback: flat { error: string }
     if (data?.error && typeof data.error === 'string') return data.error;
     // Fallback: flat { message: string }

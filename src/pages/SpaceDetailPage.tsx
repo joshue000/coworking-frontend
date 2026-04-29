@@ -19,7 +19,11 @@ export function SpaceDetailPage() {
   const [editing, setEditing] = useState<Reservation | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: space, isLoading, error } = useQuery({
+  const {
+    data: space,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['spaces', id],
     queryFn: () => getSpace(id!),
     enabled: !!id,
@@ -87,9 +91,7 @@ export function SpaceDetailPage() {
       </div>
 
       <div>
-        <h2 className="mb-3 text-base font-semibold text-slate-900">
-          Today's Reservations
-        </h2>
+        <h2 className="mb-3 text-base font-semibold text-slate-900">Today's Reservations</h2>
         {!reservationsData?.data.length ? (
           <p className="text-sm text-slate-400">No reservations scheduled for today.</p>
         ) : (
@@ -115,7 +117,12 @@ export function SpaceDetailPage() {
         />
       </Modal>
 
-      <Modal isOpen={!!editing} onClose={() => setEditing(null)} title="Edit Reservation" maxWidth="sm">
+      <Modal
+        isOpen={!!editing}
+        onClose={() => setEditing(null)}
+        title="Edit Reservation"
+        maxWidth="sm"
+      >
         {editing && (
           <EditReservationForm
             reservation={editing}

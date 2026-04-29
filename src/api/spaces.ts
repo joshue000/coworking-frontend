@@ -32,7 +32,10 @@ export async function createSpace(input: SpaceMutationInput): Promise<Space> {
   return data.data;
 }
 
-export async function updateSpace(id: string, input: Partial<Omit<SpaceMutationInput, 'placeId'>>): Promise<Space> {
+export async function updateSpace(
+  id: string,
+  input: Partial<Omit<SpaceMutationInput, 'placeId'>>
+): Promise<Space> {
   const { data } = await apiClient.patch(`/api/spaces/${id}`, input);
   return data.data;
 }

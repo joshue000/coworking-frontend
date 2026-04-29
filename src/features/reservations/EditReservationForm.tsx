@@ -31,7 +31,11 @@ interface Props {
 export function EditReservationForm({ reservation, onSuccess, onCancel }: Props) {
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       clientName: reservation.clientName,
@@ -41,7 +45,12 @@ export function EditReservationForm({ reservation, onSuccess, onCancel }: Props)
     },
   });
 
-  const { mutate, isPending, error, reset: resetMutation } = useMutation({
+  const {
+    mutate,
+    isPending,
+    error,
+    reset: resetMutation,
+  } = useMutation({
     mutationFn: (data: FormData) => updateReservation(reservation.id, data),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['reservations'] });
@@ -72,7 +81,11 @@ export function EditReservationForm({ reservation, onSuccess, onCancel }: Props)
 
       <div className="grid grid-cols-2 gap-3">
         <Field label="Start time" error={errors.startTime?.message}>
-          <input {...register('startTime')} type="time" className={inputClass(!!errors.startTime)} />
+          <input
+            {...register('startTime')}
+            type="time"
+            className={inputClass(!!errors.startTime)}
+          />
         </Field>
         <Field label="End time" error={errors.endTime?.message}>
           <input {...register('endTime')} type="time" className={inputClass(!!errors.endTime)} />
@@ -102,7 +115,15 @@ export function EditReservationForm({ reservation, onSuccess, onCancel }: Props)
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-slate-700">{label}</label>
@@ -114,6 +135,8 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 
 function inputClass(hasError: boolean) {
   return `w-full rounded-lg border px-3 py-2 text-sm placeholder-slate-400 focus:outline-none focus:ring-1 ${
-    hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'
+    hasError
+      ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+      : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'
   }`;
 }

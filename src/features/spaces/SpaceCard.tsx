@@ -17,7 +17,7 @@ export function SpaceCard({ space }: Props) {
         {space.place && (
           <div className="flex items-center gap-1.5">
             <MapPin className="h-3.5 w-3.5 shrink-0" />
-          <span>{space.place.name}</span>
+            <span>{space.place.name}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -26,7 +26,9 @@ export function SpaceCard({ space }: Props) {
         </div>
         <div className="flex items-center gap-1.5">
           <Clock className="h-3.5 w-3.5 shrink-0" />
-          <span>{space.opensAt} – {space.closesAt}</span>
+          <span>
+            {space.opensAt} – {space.closesAt}
+          </span>
         </div>
       </div>
 

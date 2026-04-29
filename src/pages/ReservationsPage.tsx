@@ -111,14 +111,24 @@ export function ReservationsPage() {
         </>
       )}
 
-      <Modal isOpen={createOpen} onClose={() => setCreateOpen(false)} title="New Reservation" maxWidth="lg">
+      <Modal
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
+        title="New Reservation"
+        maxWidth="lg"
+      >
         <CreateReservationForm
           onSuccess={() => setCreateOpen(false)}
           onCancel={() => setCreateOpen(false)}
         />
       </Modal>
 
-      <Modal isOpen={!!editing} onClose={() => setEditing(null)} title="Edit Reservation" maxWidth="sm">
+      <Modal
+        isOpen={!!editing}
+        onClose={() => setEditing(null)}
+        title="Edit Reservation"
+        maxWidth="sm"
+      >
         {editing && (
           <EditReservationForm
             reservation={editing}

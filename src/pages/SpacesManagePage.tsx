@@ -17,15 +17,20 @@ import { Pagination } from '@/components/ui/Pagination';
 const PAGE_SIZE = 10;
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
-const schema = z.object({
-  placeId: z.string().min(1, 'Place is required'),
-  name: z.string().min(1, 'Name is required'),
-  capacity: z.coerce.number().int().positive('Must be a positive number'),
-  opensAt: z.string().regex(timeRegex, 'Must be HH:mm'),
-  closesAt: z.string().regex(timeRegex, 'Must be HH:mm'),
-  reference: z.string().optional(),
-  description: z.string().optional(),
-}).refine((d) => d.opensAt < d.closesAt, { message: 'Opens at must be before closes at', path: ['closesAt'] });
+const schema = z
+  .object({
+    placeId: z.string().min(1, 'Place is required'),
+    name: z.string().min(1, 'Name is required'),
+    capacity: z.coerce.number().int().positive('Must be a positive number'),
+    opensAt: z.string().regex(timeRegex, 'Must be HH:mm'),
+    closesAt: z.string().regex(timeRegex, 'Must be HH:mm'),
+    reference: z.string().optional(),
+    description: z.string().optional(),
+  })
+  .refine((d) => d.opensAt < d.closesAt, {
+    message: 'Opens at must be before closes at',
+    path: ['closesAt'],
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -38,7 +43,11 @@ export function SpacesManagePage() {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['spaces', 'manage', { page, pageSize: PAGE_SIZE, placeId: placeFilter || undefined }],
+    queryKey: [
+      'spaces',
+      'manage',
+      { page, pageSize: PAGE_SIZE, placeId: placeFilter || undefined },
+    ],
     queryFn: () => getSpaces({ page, pageSize: PAGE_SIZE, placeId: placeFilter || undefined }),
   });
 
@@ -49,23 +58,49 @@ export function SpacesManagePage() {
 
   const invalidate = () => void queryClient.invalidateQueries({ queryKey: ['spaces'] });
 
-  const createMutation = useMutation({ mutationFn: createSpace, onSuccess: () => { invalidate(); closeModal(); } });
+  const createMutation = useMutation({
+    mutationFn: createSpace,
+    onSuccess: () => {
+      invalidate();
+      closeModal();
+    },
+  });
   const updateMutation = useMutation({
-    mutationFn: ({ id, input }: { id: string; input: Partial<Omit<FormData, 'placeId'>> }) => updateSpace(id, input),
-    onSuccess: () => { invalidate(); closeModal(); },
+    mutationFn: ({ id, input }: { id: string; input: Partial<Omit<FormData, 'placeId'>> }) =>
+      updateSpace(id, input),
+    onSuccess: () => {
+      invalidate();
+      closeModal();
+    },
   });
   const deleteMutation = useMutation({
     mutationFn: deleteSpace,
-    onSuccess: () => { invalidate(); setDeleting(null); },
+    onSuccess: () => {
+      invalidate();
+      setDeleting(null);
+    },
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { opensAt: '08:00', closesAt: '18:00', capacity: 10 },
   });
 
   function openCreate() {
-    reset({ placeId: '', name: '', capacity: 10, opensAt: '08:00', closesAt: '18:00', reference: '', description: '' });
+    reset({
+      placeId: '',
+      name: '',
+      capacity: 10,
+      opensAt: '08:00',
+      closesAt: '18:00',
+      reference: '',
+      description: '',
+    });
     setEditing(null);
     setModalOpen(true);
   }
@@ -113,12 +148,17 @@ export function SpacesManagePage() {
         <div className="flex items-center gap-2">
           <select
             value={placeFilter}
-            onChange={(e) => { setPlaceFilter(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setPlaceFilter(e.target.value);
+              setPage(1);
+            }}
             className="rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="">All places</option>
             {placesData?.data.map((p) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
             ))}
           </select>
           <button
@@ -157,13 +197,17 @@ export function SpacesManagePage() {
                     <tr key={space.id} className="hover:bg-slate-50">
                       <td className="px-4 py-3 font-medium text-slate-900">
                         {space.name}
-                        {space.reference && <span className="ml-2 text-xs text-slate-400">#{space.reference}</span>}
+                        {space.reference && (
+                          <span className="ml-2 text-xs text-slate-400">#{space.reference}</span>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-slate-500">
                         {placesData?.data.find((p) => p.id === space.placeId)?.name ?? '—'}
                       </td>
                       <td className="px-4 py-3 text-slate-500">{space.capacity}</td>
-                      <td className="px-4 py-3 text-slate-500">{space.opensAt} – {space.closesAt}</td>
+                      <td className="px-4 py-3 text-slate-500">
+                        {space.opensAt} – {space.closesAt}
+                      </td>
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-1">
                           <button
@@ -210,39 +254,75 @@ export function SpacesManagePage() {
               <select {...register('placeId')} className={inputClass(!!errors.placeId)}>
                 <option value="">Select a place</option>
                 {placesData?.data.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
                 ))}
               </select>
             </Field>
           )}
           <div className="grid grid-cols-2 gap-3">
             <Field label="Name" error={errors.name?.message}>
-              <input {...register('name')} placeholder="Room A" className={inputClass(!!errors.name)} />
+              <input
+                {...register('name')}
+                placeholder="Room A"
+                className={inputClass(!!errors.name)}
+              />
             </Field>
             <Field label="Reference" error={errors.reference?.message}>
-              <input {...register('reference')} placeholder="A-01" className={inputClass(!!errors.reference)} />
+              <input
+                {...register('reference')}
+                placeholder="A-01"
+                className={inputClass(!!errors.reference)}
+              />
             </Field>
           </div>
           <Field label="Capacity" error={errors.capacity?.message}>
-            <input {...register('capacity')} type="number" min={1} className={inputClass(!!errors.capacity)} />
+            <input
+              {...register('capacity')}
+              type="number"
+              min={1}
+              className={inputClass(!!errors.capacity)}
+            />
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="Opens at" error={errors.opensAt?.message}>
-              <input {...register('opensAt')} type="time" className={inputClass(!!errors.opensAt)} />
+              <input
+                {...register('opensAt')}
+                type="time"
+                className={inputClass(!!errors.opensAt)}
+              />
             </Field>
             <Field label="Closes at" error={errors.closesAt?.message}>
-              <input {...register('closesAt')} type="time" className={inputClass(!!errors.closesAt)} />
+              <input
+                {...register('closesAt')}
+                type="time"
+                className={inputClass(!!errors.closesAt)}
+              />
             </Field>
           </div>
           <Field label="Description" error={errors.description?.message}>
-            <textarea {...register('description')} rows={2} placeholder="Optional description" className={inputClass(!!errors.description)} />
+            <textarea
+              {...register('description')}
+              rows={2}
+              placeholder="Optional description"
+              className={inputClass(!!errors.description)}
+            />
           </Field>
           {mutationError && <ErrorMessage message={getErrorMessage(mutationError)} />}
           <div className="flex justify-end gap-2 pt-1">
-            <button type="button" onClick={closeModal} className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
               Cancel
             </button>
-            <button type="submit" disabled={isSaving} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60">
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+            >
               {isSaving ? 'Saving…' : editing ? 'Save changes' : 'Create'}
             </button>
           </div>
@@ -261,7 +341,15 @@ export function SpacesManagePage() {
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-slate-700">{label}</label>
@@ -273,6 +361,8 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 
 function inputClass(hasError: boolean) {
   return `w-full rounded-lg border px-3 py-2 text-sm placeholder-slate-400 focus:outline-none focus:ring-1 ${
-    hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'
+    hasError
+      ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+      : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'
   }`;
 }

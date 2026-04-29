@@ -52,7 +52,12 @@ export function CreateReservationForm({ spaceId, onSuccess, onCancel }: Props) {
     },
   });
 
-  const { mutate, isPending, error, reset: resetMutation } = useMutation({
+  const {
+    mutate,
+    isPending,
+    error,
+    reset: resetMutation,
+  } = useMutation({
     mutationFn: createReservation,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['reservations'] });
@@ -63,13 +68,13 @@ export function CreateReservationForm({ spaceId, onSuccess, onCancel }: Props) {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <form onSubmit={handleSubmit((data) => mutate(data as CreateReservationInput))} className="space-y-4">
+    <form
+      onSubmit={handleSubmit((data) => mutate(data as CreateReservationInput))}
+      className="space-y-4"
+    >
       {!spaceId && (
         <Field label="Space" error={errors.spaceId?.message}>
-          <select
-            {...register('spaceId')}
-            className={inputClass(!!errors.spaceId)}
-          >
+          <select {...register('spaceId')} className={inputClass(!!errors.spaceId)}>
             <option value="">Select a space</option>
             {spacesData?.data.map((s) => (
               <option key={s.id} value={s.id}>
@@ -116,11 +121,7 @@ export function CreateReservationForm({ spaceId, onSuccess, onCancel }: Props) {
           />
         </Field>
         <Field label="End time" error={errors.endTime?.message}>
-          <input
-            {...register('endTime')}
-            type="time"
-            className={inputClass(!!errors.endTime)}
-          />
+          <input {...register('endTime')} type="time" className={inputClass(!!errors.endTime)} />
         </Field>
       </div>
 

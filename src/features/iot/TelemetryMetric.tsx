@@ -9,9 +9,7 @@ interface Props {
 export function TelemetryMetric({ label, value, unit, icon, alert = false }: Props) {
   return (
     <div
-      className={`flex items-center gap-2 rounded-lg p-3 ${
-        alert ? 'bg-red-50' : 'bg-slate-50'
-      }`}
+      className={`flex items-center gap-2 rounded-lg p-3 ${alert ? 'bg-red-50' : 'bg-slate-50'}`}
     >
       <div className={`shrink-0 ${alert ? 'text-red-500' : 'text-slate-400'}`}>{icon}</div>
       <div>

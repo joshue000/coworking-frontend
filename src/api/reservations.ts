@@ -27,7 +27,10 @@ export async function createReservation(input: CreateReservationInput): Promise<
   return data.data;
 }
 
-export async function updateReservation(id: string, input: Partial<Omit<CreateReservationInput, 'spaceId'>>): Promise<Reservation> {
+export async function updateReservation(
+  id: string,
+  input: Partial<Omit<CreateReservationInput, 'spaceId'>>
+): Promise<Reservation> {
   const { data } = await apiClient.patch(`/api/reservations/${id}`, input);
   return data.data;
 }

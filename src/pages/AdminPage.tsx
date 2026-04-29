@@ -28,9 +28,7 @@ export function AdminPage() {
           <h1 className="text-xl font-semibold text-slate-900">IoT Dashboard</h1>
         </div>
         <div className="flex items-center gap-3">
-          {lastUpdated && (
-            <span className="text-xs text-slate-400">Updated at {lastUpdated}</span>
-          )}
+          {lastUpdated && <span className="text-xs text-slate-400">Updated at {lastUpdated}</span>}
           <button
             onClick={() => void refetch()}
             disabled={isFetching}

@@ -60,6 +60,58 @@ npm run preview
 docker compose up --build -d
 ```
 
+---
+
+## Testing
+
+### Unit & Component Tests (Vitest + React Testing Library)
+
+```bash
+# Run tests once
+npm run test
+
+# Run in watch mode
+npm run test:watch
+
+# Run with coverage report
+npm run test:coverage
+```
+
+Tests live in `src/test/` — unit tests under `unit/`, component tests under `components/`.
+
+### E2E Tests (Playwright)
+
+```bash
+# Install Playwright browsers (first time only)
+npx playwright install --with-deps chromium
+
+# Run e2e tests (starts the dev server automatically)
+npm run e2e
+
+# Run with Playwright UI (interactive)
+npx playwright test --ui
+```
+
+E2E tests live in `e2e/`. They use `page.route()` to mock all API responses — no backend needed.
+
+---
+
+## Linting & Formatting
+
+```bash
+# Check for lint errors
+npm run lint
+
+# Auto-fix lint errors
+npm run lint:fix
+
+# Check code formatting
+npm run format:check
+
+# Apply code formatting
+npm run format
+```
+
 > `VITE_API_BASE_URL` is baked into the bundle at build time. Override it before building:
 
 ```bash

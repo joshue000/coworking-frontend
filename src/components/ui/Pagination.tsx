@@ -17,8 +17,11 @@ export function Pagination({ page, totalPages, total, pageSize, onPageChange }: 
   return (
     <div className="flex items-center justify-between border-t border-slate-200 pt-4">
       <p className="text-sm text-slate-500">
-        Showing <span className="font-medium">{from}–{to}</span> of{' '}
-        <span className="font-medium">{total}</span>
+        Showing{' '}
+        <span className="font-medium">
+          {from}–{to}
+        </span>{' '}
+        of <span className="font-medium">{total}</span>
       </p>
       <div className="flex items-center gap-1">
         <button
@@ -37,7 +40,9 @@ export function Pagination({ page, totalPages, total, pageSize, onPageChange }: 
           }, [])
           .map((p, i) =>
             p === '...' ? (
-              <span key={`ellipsis-${i}`} className="px-1 text-slate-400">…</span>
+              <span key={`ellipsis-${i}`} className="px-1 text-slate-400">
+                …
+              </span>
             ) : (
               <button
                 key={p}

@@ -6,10 +6,10 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import axios from 'axios';
 
 async function validateApiKey(key: string): Promise<void> {
-  await axios.get(
-    `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'}/api/spaces`,
-    { headers: { 'x-api-key': key }, params: { pageSize: 1 } }
-  );
+  await axios.get(`${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'}/api/spaces`, {
+    headers: { 'x-api-key': key },
+    params: { pageSize: 1 },
+  });
 }
 
 export function ApiKeySetup() {
@@ -50,9 +50,7 @@ export function ApiKeySetup() {
             <Key className="h-6 w-6 text-blue-600" />
           </div>
           <h1 className="text-lg font-semibold text-slate-900">Enter your API Key</h1>
-          <p className="text-sm text-slate-500">
-            Required to authenticate with the Coworking API.
-          </p>
+          <p className="text-sm text-slate-500">Required to authenticate with the Coworking API.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

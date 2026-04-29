@@ -16,9 +16,10 @@ function getDetails(error: unknown): { title: string; message: string } {
   if (isRouteErrorResponse(error)) {
     return {
       title: `${error.status} ${error.statusText}`,
-      message: error.status === 404
-        ? 'The page you are looking for does not exist.'
-        : (error.data?.message ?? 'An unexpected error occurred.'),
+      message:
+        error.status === 404
+          ? 'The page you are looking for does not exist.'
+          : (error.data?.message ?? 'An unexpected error occurred.'),
     };
   }
   if (axios.isAxiosError(error)) {
@@ -27,9 +28,15 @@ function getDetails(error: unknown): { title: string; message: string } {
     return { title: `Error ${error.response?.status ?? ''}`.trim(), message: msg };
   }
   if (error instanceof Error) {
-    return { title: 'Something went wrong', message: 'An unexpected error occurred. Please try again.' };
+    return {
+      title: 'Something went wrong',
+      message: 'An unexpected error occurred. Please try again.',
+    };
   }
-  return { title: 'Something went wrong', message: 'An unexpected error occurred. Please try again.' };
+  return {
+    title: 'Something went wrong',
+    message: 'An unexpected error occurred. Please try again.',
+  };
 }
 
 export function ErrorBoundary() {

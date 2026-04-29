@@ -39,17 +39,34 @@ export function PlacesPage() {
 
   const invalidate = () => void queryClient.invalidateQueries({ queryKey: ['places'] });
 
-  const createMutation = useMutation({ mutationFn: createPlace, onSuccess: () => { invalidate(); closeModal(); } });
+  const createMutation = useMutation({
+    mutationFn: createPlace,
+    onSuccess: () => {
+      invalidate();
+      closeModal();
+    },
+  });
   const updateMutation = useMutation({
     mutationFn: ({ id, input }: { id: string; input: Partial<FormData> }) => updatePlace(id, input),
-    onSuccess: () => { invalidate(); closeModal(); },
+    onSuccess: () => {
+      invalidate();
+      closeModal();
+    },
   });
   const deleteMutation = useMutation({
     mutationFn: deletePlace,
-    onSuccess: () => { invalidate(); setDeleting(null); },
+    onSuccess: () => {
+      invalidate();
+      setDeleting(null);
+    },
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { timezone: 'America/Panama' },
   });
@@ -61,7 +78,12 @@ export function PlacesPage() {
   }
 
   function openEdit(place: Place) {
-    reset({ name: place.name, latitude: place.latitude ?? 0, longitude: place.longitude ?? 0, timezone: place.timezone });
+    reset({
+      name: place.name,
+      latitude: place.latitude ?? 0,
+      longitude: place.longitude ?? 0,
+      timezone: place.timezone,
+    });
     setEditing(place);
     setModalOpen(true);
   }
@@ -170,25 +192,59 @@ export function PlacesPage() {
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Field label="Name" error={errors.name?.message}>
-            <input {...register('name')} placeholder="Main Office" className={inputClass(!!errors.name)} />
+            <input
+              {...register('name')}
+              placeholder="Main Office"
+              className={inputClass(!!errors.name)}
+            />
           </Field>
           <Field label="Timezone" error={errors.timezone?.message}>
-            <input {...register('timezone')} placeholder="America/Panama" className={inputClass(!!errors.timezone)} />
+            <input
+              {...register('timezone')}
+              placeholder="America/Panama"
+              className={inputClass(!!errors.timezone)}
+            />
           </Field>
           <div className="grid grid-cols-2 gap-3">
             <Field label="Latitude" error={errors.latitude?.message}>
-              <input {...register('latitude')} type="number" step="any" className={inputClass(!!errors.latitude)} />
+              <input
+                {...register('latitude')}
+                type="number"
+                step="any"
+                className={inputClass(!!errors.latitude)}
+              />
             </Field>
             <Field label="Longitude" error={errors.longitude?.message}>
-              <input {...register('longitude')} type="number" step="any" className={inputClass(!!errors.longitude)} />
+              <input
+                {...register('longitude')}
+                type="number"
+                step="any"
+                className={inputClass(!!errors.longitude)}
+              />
             </Field>
           </div>
-          {mutationError && <ErrorModal message={getErrorMessage(mutationError)} onClose={() => { createMutation.reset(); updateMutation.reset(); }} />}
+          {mutationError && (
+            <ErrorModal
+              message={getErrorMessage(mutationError)}
+              onClose={() => {
+                createMutation.reset();
+                updateMutation.reset();
+              }}
+            />
+          )}
           <div className="flex justify-end gap-2 pt-1">
-            <button type="button" onClick={closeModal} className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
               Cancel
             </button>
-            <button type="submit" disabled={isSaving} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60">
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+            >
               {isSaving ? 'Saving…' : editing ? 'Save changes' : 'Create'}
             </button>
           </div>
@@ -207,7 +263,15 @@ export function PlacesPage() {
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-slate-700">{label}</label>
@@ -219,6 +283,8 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 
 function inputClass(hasError: boolean) {
   return `w-full rounded-lg border px-3 py-2 text-sm placeholder-slate-400 focus:outline-none focus:ring-1 ${
-    hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'
+    hasError
+      ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+      : 'border-slate-300 focus:border-blue-500 focus:ring-blue-500'
   }`;
 }
