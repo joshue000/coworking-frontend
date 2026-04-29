@@ -4,7 +4,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { LayoutGrid, Plus, Pencil, Trash2 } from 'lucide-react';
-import { getSpaces, createSpace, updateSpace, deleteSpace, type SpaceMutationInput } from '@/api/spaces';
+import {
+  getSpaces,
+  createSpace,
+  updateSpace,
+  deleteSpace,
+  type SpaceMutationInput,
+} from '@/api/spaces';
 import { getPlaces } from '@/api/places';
 import type { Space } from '@/types';
 import { getErrorMessage } from '@/api/client';
