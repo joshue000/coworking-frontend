@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { MapPin, Plus, Pencil, Trash2 } from 'lucide-react';
-import { getPlaces, createPlace, updatePlace, deletePlace } from '@/api/places';
+import { getPlaces, createPlace, updatePlace, deletePlace, type PlaceMutationInput } from '@/api/places';
 import type { Place } from '@/types';
 import { getErrorMessage } from '@/api/client';
 import { Modal } from '@/components/ui/Modal';
@@ -99,7 +99,7 @@ export function PlacesPage() {
     if (editing) {
       updateMutation.mutate({ id: editing.id, input: data });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(data as PlaceMutationInput);
     }
   }
 
